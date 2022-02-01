@@ -1,0 +1,6 @@
+[database]
+dbname = 'PG_DBNAME'
+username = 'PG_USER'
+password = 'PASSWORD'
+port = 'PORT'
+host = 'HOST'
