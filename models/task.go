@@ -4,8 +4,10 @@ type Task struct {
 	Model
 	MathEgeID     uint   `gorm:"unique"`
 	TaskText      string `json:"task_text"`
-	PatternTaskID uint   `json:"pattern_task_id"`
+	PatternTaskID uint   `gorm:"default:null" json:"pattern_task_id"`
 
 	PatternTask PatternTask `json:"pattern_task"`
-	Images      []TaskImage `json:"images"`
+	Images      TaskImages  `json:"images"`
 }
+
+type Tasks []Task

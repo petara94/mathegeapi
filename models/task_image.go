@@ -6,3 +6,5 @@ type TaskImage struct {
 	FileType string `gorm:"not null"`
 	TaskID   uint
 }
+
+type TaskImages []TaskImage
