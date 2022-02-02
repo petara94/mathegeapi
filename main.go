@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"mathegeapi/config"
+	"mathegeapi/models"
 	"mathegeapi/routers"
 	"mathegeapi/stores"
 	"net/http"
@@ -25,6 +26,11 @@ func main() {
 
 	store := stores.NewStore(&cnf.Database)
 	err = store.Open()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	err = store.DB.AutoMigrate(&models.Task{}, &models.TaskImage{}, &models.PatternTask{})
 	if err != nil {
 		log.Fatal(err.Error())
 	}
