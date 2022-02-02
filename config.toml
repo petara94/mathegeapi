@@ -4,3 +4,6 @@ username = 'PG_USER'
 password = 'PASSWORD'
 port = 'PORT'
 host = 'HOST'
+
+[server]
+port = "SERVER_PORT"
