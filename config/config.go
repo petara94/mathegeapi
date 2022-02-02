@@ -1,13 +1,15 @@
 package config
 
 import (
+	"errors"
+	"fmt"
 	"github.com/naoina/toml"
-	"log"
 	"os"
 )
 
 type ApiConfig struct {
 	Database DatabaseConfig
+	Server   ServerConfig
 }
 
 type DatabaseConfig struct {
@@ -18,18 +20,25 @@ type DatabaseConfig struct {
 	Password string
 }
 
-var Config ApiConfig
+type ServerConfig struct {
+	Port      string
+	ImagesDir string
+}
 
-func Setup(ConfigFile string) {
+func LoadConfig(ConfigFile string) (ApiConfig, error) {
+	var cnf ApiConfig
+
 	f, err := os.Open(ConfigFile)
 
 	if err != nil {
-		log.Fatal("config.Setup() - невозможно открыть файл конфигурации \"" + ConfigFile + "\"\n")
+		return cnf, errors.New("config.Setup() - невозможно открыть файл конфигурации \"" + ConfigFile + "\"\n")
 	}
 
-	if err = toml.NewDecoder(f).Decode(&Config); err != nil {
-		log.Fatalf("config.Setup() - неизвестная ошибка: %v", err)
+	if err = toml.NewDecoder(f).Decode(&cnf); err != nil {
+		return cnf, errors.New(fmt.Sprintf("config.Setup() - неизвестная ошибка: %v", err))
 	}
+
+	return cnf, nil
 }
 
 func (dc DatabaseConfig) DSN() string {
@@ -38,5 +47,5 @@ func (dc DatabaseConfig) DSN() string {
 		" password=" + dc.Password +
 		" dbname=" + dc.DBName +
 		" port=" + dc.Port +
-		"sslmode=disable"
+		" sslmode=disable"
 }

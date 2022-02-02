@@ -7,3 +7,4 @@ host = 'HOST'
 
 [server]
 port = "SERVER_PORT"
+images_dir = "./static/images"
