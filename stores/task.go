@@ -28,6 +28,15 @@ func (ts *TaskStore) Get(id uint) (*models.Task, error) {
 	return &task, nil
 }
 
+func (ts *TaskStore) GetAll() (tasks models.Tasks) {
+	ts.store.RLock()
+	defer ts.store.RUnlock()
+
+	ts.store.DB.Preload(clause.Associations).Find(&tasks)
+
+	return tasks
+}
+
 func (ts *TaskStore) Add(task models.Task) (*models.Task, error) {
 	ts.store.Lock()
 	defer ts.store.Unlock()
