@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
 func StoreForTests() *Store {
 	cnf, err := config.LoadConfig("../" + config.ConfigFilePath)
 	if err != nil {
@@ -31,7 +35,6 @@ func StoreForTests() *Store {
 }
 
 func TestTaskStore_Get(t *testing.T) {
-	rand.Seed(time.Now().UnixNano())
 	s := StoreForTests()
 	task := models.Task{
 		MathEgeID: uint(rand.Int()),
@@ -46,11 +49,10 @@ func TestTaskStore_Get(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, get.MathEgeID, task.MathEgeID)
 
-	s.DB.Delete(&task)
+	s.DB.Unscoped().Delete(&task)
 }
 
 func TestTaskStore_Add(t *testing.T) {
-	rand.Seed(time.Now().UnixNano())
 	s := StoreForTests()
 	task := models.Task{
 		MathEgeID: uint(rand.Int()),
@@ -66,7 +68,6 @@ func TestTaskStore_Add(t *testing.T) {
 }
 
 func TestTaskStore_Update(t *testing.T) {
-	rand.Seed(time.Now().UnixNano())
 	s := StoreForTests()
 	task := models.Task{
 		MathEgeID: uint(rand.Int()),

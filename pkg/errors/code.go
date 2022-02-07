@@ -1,0 +1,15 @@
+package errors
+
+const (
+	SUCCESS        = 200
+	ERROR          = 500
+	INVALID_PARAMS = 400
+
+	ERROR_NOT_EXIST      = 10000
+	ERROR_NOT_EXIST_TASK = 10001
+
+	ERROR_WRONG_JSON = 20000
+
+	ERROR_ADD    = 30000
+	ERROR_UPDATE = 30001
+)

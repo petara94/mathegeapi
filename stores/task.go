@@ -62,16 +62,14 @@ func (ts *TaskStore) Update(id uint, task models.Task) (*models.Task, error) {
 	ts.store.Lock()
 	defer ts.store.Unlock()
 
-	toUpdate := models.Task{}
-	ts.store.DB.Preload(clause.Associations).Find(&toUpdate, id)
-	if toUpdate.ID == 0 {
-		return nil, errors.New("нет такой задачи")
-	}
+	task.ID = id
 
-	res := ts.store.DB.Model(&toUpdate).Updates(&task)
+	res := ts.store.DB.Model(&task).Omit("id", "created_at", "deleted_id", "updated_at").Updates(task.Allowed())
 	if res.Error != nil {
 		return nil, errors.New(fmt.Sprintf("задача не может быть обновлена: %v", res.Error))
 	}
 
-	return &toUpdate, nil
+	ts.store.DB.Preload(clause.Associations).Find(&task, id)
+
+	return &task, nil
 }
