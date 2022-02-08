@@ -14,5 +14,4 @@ func InitTaskRouter(r *gin.RouterGroup, store *stores.Store) {
 	r.GET("/:id", taskService.Get)
 	r.DELETE("/:id", taskService.Delete)
 	r.PUT("/:id", taskService.Update)
-
 }
