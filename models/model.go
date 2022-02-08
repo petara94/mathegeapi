@@ -2,6 +2,7 @@ package models
 
 import (
 	"gorm.io/gorm"
+	"gorm.io/gorm/callbacks"
 	"time"
 )
 
@@ -12,6 +13,11 @@ type Model struct {
 	DeletedAt gorm.DeletedAt `gorm:"index;autoDeleteTime:milli" json:"-"`
 }
 
+//AllowedToUpdate Обязует замещать данные которые
+//защищены от обновления перед транзакией
 type AllowedToUpdate interface {
+	callbacks.BeforeUpdateInterface
+
+	//Allowed Возвращает поля и их значения для изменения
 	Allowed() map[string]interface{}
 }
