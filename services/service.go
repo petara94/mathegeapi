@@ -1,8 +1,10 @@
 package services
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
-type CRUD interface {
+type CRUDService interface {
 	Get(c *gin.Context)
 	GetAll(c *gin.Context)
 	Add(c *gin.Context)

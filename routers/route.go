@@ -17,6 +17,7 @@ func InitApiRouter(apiConfig config.ApiConfig, store *stores.Store) *gin.Engine 
 	apiGroup := r.Group("api/v1")
 
 	v1.InitTaskRouter(apiGroup.Group("tasks"), store)
+	v1.InitPatternTaskRouter(apiGroup.Group("patterns"), store)
 
 	return r
 }

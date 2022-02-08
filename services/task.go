@@ -19,14 +19,6 @@ func NewTaskService(store *stores.Store) *TaskService {
 	return &TaskService{store: stores.NewTaskStore(store)}
 }
 
-func (s *TaskService) GetAll(c *gin.Context) {
-	sender := app.Gin{C: c}
-
-	tasks := s.store.GetAll()
-
-	sender.Response(http.StatusOK, errors.SUCCESS, tasks)
-}
-
 func (s *TaskService) Get(c *gin.Context) {
 	sender := app.Gin{C: c}
 
@@ -43,6 +35,18 @@ func (s *TaskService) Get(c *gin.Context) {
 	}
 
 	sender.Response(http.StatusOK, errors.SUCCESS, task)
+}
+
+func (s *TaskService) GetAll(c *gin.Context) {
+	sender := app.Gin{C: c}
+
+	tasks, err := s.store.GetAll()
+	if err != nil {
+		sender.Response(http.StatusBadRequest, errors.INVALID_PARAMS, app.NewErrorData(err))
+		return
+	}
+
+	sender.Response(http.StatusOK, errors.SUCCESS, tasks)
 }
 
 func (s *TaskService) Add(c *gin.Context) {
