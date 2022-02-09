@@ -106,3 +106,11 @@ func (s *TaskService) Delete(c *gin.Context) {
 
 	sender.Response(http.StatusOK, errors.SUCCESS, nil)
 }
+
+func (s *TaskService) Sub(r *gin.RouterGroup) {
+	r.GET("/", s.GetAll)
+	r.POST("/", s.Add)
+	r.GET("/:id", s.Get)
+	r.DELETE("/:id", s.Delete)
+	r.PUT("/:id", s.Update)
+}

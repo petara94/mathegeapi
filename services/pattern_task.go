@@ -105,3 +105,11 @@ func (p *PatternTaskService) Delete(c *gin.Context) {
 
 	sender.Response(http.StatusOK, errors.SUCCESS, nil)
 }
+
+func (p *PatternTaskService) Sub(r *gin.RouterGroup) {
+	r.GET("/", p.GetAll)
+	r.POST("/", p.Add)
+	r.GET("/:id", p.Get)
+	r.DELETE("/:id", p.Delete)
+	r.PUT("/:id", p.Update)
+}
