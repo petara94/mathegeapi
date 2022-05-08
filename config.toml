@@ -6,5 +6,6 @@ port = 'PORT'
 host = 'HOST'
 
 [server]
-port = "SERVER_PORT"
+db_from_env = true
+port = "34455"
 images_dir = "./static/images"
