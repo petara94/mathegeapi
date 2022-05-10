@@ -39,24 +39,21 @@ func LoadConfig(ConfigFile string) (ApiConfig, error) {
 		return cnf, errors.New(fmt.Sprintf("config.Setup() - неизвестная ошибка: %v", err))
 	}
 
-	if cnf.Server.DBFromEnv {
-		cnf.Database = DatabaseConfig{
-			Port:     os.Getenv("DB_PORT"),
-			Username: os.Getenv("DB_USER"),
-			Host:     os.Getenv("DB_HOST"),
-			DBName:   os.Getenv("DB_NAME"),
-			Password: os.Getenv("DB_PASSWORD"),
-		}
+	dbEnv := DatabaseConfig{
+		Port:     os.Getenv("DB_PORT"),
+		Username: os.Getenv("DB_USER"),
+		Host:     os.Getenv("DB_HOST"),
+		DBName:   os.Getenv("DB_NAME"),
+		Password: os.Getenv("DB_PASSWORD"),
+	}
+
+	if dbEnv != (DatabaseConfig{}) {
+		cnf.Database = dbEnv
 	}
 
 	return cnf, nil
 }
 
 func (dc DatabaseConfig) DSN() string {
-	return "host=" + dc.Host +
-		" user=" + dc.Username +
-		" password=" + dc.Password +
-		" dbname=" + dc.DBName +
-		" port=" + dc.Port +
-		" sslmode=disable"
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", dc.Username, dc.Password, dc.Host, dc.Port, dc.DBName)
 }

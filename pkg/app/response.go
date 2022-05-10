@@ -2,7 +2,6 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-
 	"mathegeapi/pkg/errors"
 )
 

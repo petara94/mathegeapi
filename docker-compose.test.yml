@@ -1,0 +1,23 @@
+version: "2"
+services:
+  postgres_db:
+    image: postgres
+    container_name: postgres_testing
+    ports:
+      - "5454:5432"
+    environment:
+      - POSTGRES_USER=mathege_user
+      - POSTGRES_PASSWORD=123321
+      - POSTGRES_DB=mathege
+  app:
+    build: .
+    environment:
+      - DB_USER=mathege_user
+      - DB_PASSWORD=123321
+      - DB_HOST=postgres_db
+      - DB_NAME=mathege
+      - DB_PORT=5432
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_db

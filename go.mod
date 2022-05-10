@@ -1,12 +1,11 @@
 module mathegeapi
 
-go 1.17
+go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/naoina/toml v0.1.1
 	github.com/stretchr/testify v1.7.0
-	gopkg.in/gographics/imagick.v2 v2.6.0
 	gorm.io/driver/postgres v1.2.3
 	gorm.io/gorm v1.22.5
 )
