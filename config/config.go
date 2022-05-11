@@ -36,7 +36,7 @@ func LoadConfig(ConfigFile string) (ApiConfig, error) {
 	}
 
 	if err = toml.NewDecoder(f).Decode(&cnf); err != nil {
-		return cnf, errors.New(fmt.Sprintf("config.Setup() - неизвестная ошибка: %v", err))
+		return cnf, fmt.Errorf("config.Setup() - неизвестная ошибка: %v", err)
 	}
 
 	dbEnv := DatabaseConfig{

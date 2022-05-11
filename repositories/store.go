@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"errors"
 	"fmt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -24,13 +23,13 @@ func (s *Store) Open() error {
 	s.DB, err = gorm.Open(postgres.Open(s.Config.DSN()), &gorm.Config{})
 
 	if err != nil {
-		return errors.New(fmt.Sprintf("Store.Open() err: %v", err))
+		return fmt.Errorf("Store.Open() err: %v", err)
 	}
 
 	db, err := s.DB.DB()
 
 	if err != nil {
-		return errors.New(fmt.Sprintf("Store.Open() err: %v", err))
+		return fmt.Errorf("Store.Open() err: %v", err)
 	}
 
 	db.SetMaxIdleConns(10)

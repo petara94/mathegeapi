@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"errors"
 	"fmt"
 	"gorm.io/gorm/clause"
 	"mathegeapi/models"
@@ -34,7 +33,7 @@ func (rep *CrudRepository[T, K]) Get(id K) (*T, error) {
 
 	// Не найдено если ключ равен своему нулевому значению
 	if fmt.Sprint(act) == fmt.Sprint(def) {
-		return nil, errors.New("запись не найдена")
+		return nil, fmt.Errorf("запись не найдена")
 	}
 
 	return entity, nil
@@ -51,7 +50,7 @@ func (rep *CrudRepository[T, K]) Add(entity T) (*T, error) {
 
 	res := rep.Store.DB.Create(&entity)
 	if res.Error != nil {
-		return nil, errors.New(fmt.Sprintf("запись не может быть добавлена: %v", res.Error))
+		return nil, fmt.Errorf("запись не может быть добавлена: %v", res.Error)
 	}
 
 	return &entity, nil
@@ -70,7 +69,7 @@ func (rep *CrudRepository[T, K]) UpdateUnsafe(id K, entity T) (*T, error) {
 
 	res := rep.Store.DB.Model(&entity).Updates(models.AllowedToUpdate(&entity))
 	if res.Error != nil {
-		return nil, errors.New(fmt.Sprintf("запись не может быть обновлена: %v", res.Error))
+		return nil, fmt.Errorf("запись не может быть обновлена: %v", res.Error)
 	}
 
 	rep.Store.DB.Preload(clause.Associations).Find(&entity, id)
@@ -86,7 +85,7 @@ func (rep *CrudRepository[T, K]) Update(id K, entity T) (*T, error) {
 
 	res := rep.Store.DB.Updates(entity)
 	if res.Error != nil {
-		return nil, errors.New(fmt.Sprintf("запись не может быть обновлена: %v", res.Error))
+		return nil, fmt.Errorf("запись не может быть обновлена: %v", res.Error)
 	}
 
 	rep.Store.DB.Preload(clause.Associations).Find(&entity, id)
