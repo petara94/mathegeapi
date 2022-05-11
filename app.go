@@ -5,8 +5,8 @@ import (
 	"log"
 	"mathegeapi/config"
 	"mathegeapi/models"
+	"mathegeapi/repositories"
 	"mathegeapi/services"
-	"mathegeapi/stores"
 	"net/http"
 )
 
@@ -29,7 +29,7 @@ func (r Router) AddService(path string, service services.Service) {
 
 type App struct {
 	config config.ApiConfig
-	store  *stores.Store
+	store  *repositories.Store
 	router *gin.Engine
 }
 
@@ -42,7 +42,7 @@ func NewApp() *App {
 		log.Fatal(err.Error())
 	}
 
-	app.store = stores.NewStore(app.config.Database)
+	app.store = repositories.NewStore(app.config.Database)
 	err = app.store.Open()
 	if err != nil {
 		log.Fatal(err.Error())
@@ -59,9 +59,9 @@ func NewApp() *App {
 	app.router.Static("/images", app.config.Server.ImagesDir)
 
 	v1 := app.Group("/api/v1")
-	v1.AddService("tasks", services.NewTaskService(app.store))
-	v1.AddService("pattern_tasks", services.NewPatternTaskService(app.store))
-	v1.AddService("task_images", services.NewTaskImageService(app.store))
+	v1.AddService("tasks", services.NewTaskController(app.store))
+	v1.AddService("pattern_tasks", services.NewPatternTaskController(app.store))
+	v1.AddService("task_images", services.NewTaskImageController(app.store))
 
 	return app
 }

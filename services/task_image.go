@@ -3,18 +3,18 @@ package services
 import (
 	"github.com/gin-gonic/gin"
 	"mathegeapi/models"
-	"mathegeapi/stores"
+	"mathegeapi/repositories"
 )
 
-type TaskImageService struct {
-	CrudService[models.TaskImage]
-	rep stores.TaskImageRepository
+type TaskImageController struct {
+	CrudController[models.TaskImage]
+	rep repositories.TaskImageRepository
 }
 
-func NewTaskImageService(store *stores.Store) *TaskImageService {
-	return &TaskImageService{CrudService: *NewCRUDService[models.TaskImage](store), rep: *stores.NewTaskImageRepository(store)}
+func NewTaskImageController(store *repositories.Store) *TaskImageController {
+	return &TaskImageController{CrudController: *NewCRUDController[models.TaskImage](store), rep: *repositories.NewTaskImageRepository(store)}
 }
 
-func (s *TaskImageService) Sub(r gin.IRouter) {
-	s.CrudService.Sub(r)
+func (s *TaskImageController) Sub(r gin.IRouter) {
+	s.CrudController.Sub(r)
 }

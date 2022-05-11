@@ -4,18 +4,18 @@ import "C"
 import (
 	"github.com/gin-gonic/gin"
 	"mathegeapi/models"
-	"mathegeapi/stores"
+	"mathegeapi/repositories"
 )
 
-type TaskService struct {
-	CrudService[models.Task]
-	rep *stores.TaskRepository
+type TaskController struct {
+	CrudController[models.Task]
+	rep *repositories.TaskRepository
 }
 
-func NewTaskService(store *stores.Store) *TaskService {
-	return &TaskService{CrudService: *NewCRUDService[models.Task](store), rep: stores.NewTaskStore(store)}
+func NewTaskController(store *repositories.Store) *TaskController {
+	return &TaskController{CrudController: *NewCRUDController[models.Task](store), rep: repositories.NewTaskStore(store)}
 }
 
-func (s *TaskService) Sub(r gin.IRouter) {
-	s.CrudService.Sub(r)
+func (s *TaskController) Sub(r gin.IRouter) {
+	s.CrudController.Sub(r)
 }

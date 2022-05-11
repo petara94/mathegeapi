@@ -6,19 +6,19 @@ import (
 	"mathegeapi/pkg/app"
 	"mathegeapi/pkg/errors"
 	"mathegeapi/pkg/utils"
-	"mathegeapi/stores"
+	"mathegeapi/repositories"
 	"net/http"
 )
 
-type CrudService[T any] struct {
-	rep *stores.CrudRepository[T, models.ID]
+type CrudController[T any] struct {
+	rep *repositories.CrudRepository[T, models.ID]
 }
 
-func NewCRUDService[T any](store *stores.Store) *CrudService[T] {
-	return &CrudService[T]{rep: stores.NewCRUDRepository[T, models.ID](store)}
+func NewCRUDController[T any](store *repositories.Store) *CrudController[T] {
+	return &CrudController[T]{rep: repositories.NewCRUDRepository[T, models.ID](store)}
 }
 
-func (s *CrudService[T]) Sub(r gin.IRouter) {
+func (s *CrudController[T]) Sub(r gin.IRouter) {
 	r.GET("/", s.GetAll)
 	r.POST("/", s.Add)
 	r.GET("/:id", s.Get)
@@ -27,7 +27,7 @@ func (s *CrudService[T]) Sub(r gin.IRouter) {
 	r.PATCH("/:id", s.Update)
 }
 
-func (s *CrudService[T]) GetAll(c *gin.Context) {
+func (s *CrudController[T]) GetAll(c *gin.Context) {
 	sender := app.Gin{C: c}
 
 	entities := s.rep.GetAll()
@@ -35,7 +35,7 @@ func (s *CrudService[T]) GetAll(c *gin.Context) {
 	sender.Response(http.StatusOK, errors.SUCCESS, entities)
 }
 
-func (s *CrudService[T]) Get(c *gin.Context) {
+func (s *CrudController[T]) Get(c *gin.Context) {
 	sender := app.Gin{C: c}
 
 	id, err := utils.Atoi64(c.Param("id"))
@@ -53,7 +53,7 @@ func (s *CrudService[T]) Get(c *gin.Context) {
 	sender.Response(http.StatusOK, errors.SUCCESS, entity)
 }
 
-func (s *CrudService[T]) Add(c *gin.Context) {
+func (s *CrudController[T]) Add(c *gin.Context) {
 	sender := app.Gin{C: c}
 	var json T
 
@@ -72,7 +72,7 @@ func (s *CrudService[T]) Add(c *gin.Context) {
 	sender.Response(http.StatusOK, errors.SUCCESS, added)
 }
 
-func (s *CrudService[T]) UpdateUnsafe(c *gin.Context) {
+func (s *CrudController[T]) UpdateUnsafe(c *gin.Context) {
 	sender := app.Gin{C: c}
 	var json T
 
@@ -97,7 +97,7 @@ func (s *CrudService[T]) UpdateUnsafe(c *gin.Context) {
 	sender.Response(http.StatusOK, errors.SUCCESS, updated)
 }
 
-func (s *CrudService[T]) Update(c *gin.Context) {
+func (s *CrudController[T]) Update(c *gin.Context) {
 	sender := app.Gin{C: c}
 	var json T
 
@@ -122,7 +122,7 @@ func (s *CrudService[T]) Update(c *gin.Context) {
 	sender.Response(http.StatusOK, errors.SUCCESS, updated)
 }
 
-func (s *CrudService[T]) Delete(c *gin.Context) {
+func (s *CrudController[T]) Delete(c *gin.Context) {
 	sender := app.Gin{C: c}
 
 	id, err := utils.Atoi64(c.Param("id"))

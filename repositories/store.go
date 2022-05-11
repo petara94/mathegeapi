@@ -1,4 +1,4 @@
-package stores
+package repositories
 
 import (
 	"errors"
@@ -6,12 +6,10 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"mathegeapi/config"
-	"sync"
 	"time"
 )
 
 type Store struct {
-	sync.RWMutex
 	Config config.DatabaseConfig
 	DB     *gorm.DB
 }

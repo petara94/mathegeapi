@@ -1,4 +1,4 @@
-package stores
+package repositories
 
 import (
 	"errors"
@@ -25,9 +25,6 @@ func NewCRUDRepository[T any, K comparable](store *Store) *CrudRepository[T, K] 
 }
 
 func (rep *CrudRepository[T, K]) Get(id K) (*T, error) {
-	rep.Store.Lock()
-	defer rep.Store.Unlock()
-
 	var entity *T = new(T)
 	rep.Store.DB.Preload(clause.Associations).Find(entity, id)
 
@@ -44,8 +41,6 @@ func (rep *CrudRepository[T, K]) Get(id K) (*T, error) {
 }
 
 func (rep *CrudRepository[T, K]) GetAll() (entities []T) {
-	rep.Store.RLock()
-	defer rep.Store.RUnlock()
 
 	rep.Store.DB.Preload(clause.Associations).Find(&entities)
 
@@ -53,8 +48,6 @@ func (rep *CrudRepository[T, K]) GetAll() (entities []T) {
 }
 
 func (rep *CrudRepository[T, K]) Add(entity T) (*T, error) {
-	rep.Store.Lock()
-	defer rep.Store.Unlock()
 
 	res := rep.Store.DB.Create(&entity)
 	if res.Error != nil {
@@ -65,8 +58,6 @@ func (rep *CrudRepository[T, K]) Add(entity T) (*T, error) {
 }
 
 func (rep *CrudRepository[T, K]) Delete(id K) {
-	rep.Store.Lock()
-	defer rep.Store.Unlock()
 
 	rep.Store.DB.Delete(&models.Task{}, id)
 }
@@ -74,8 +65,6 @@ func (rep *CrudRepository[T, K]) Delete(id K) {
 // UpdateUnsafe изменяет все поля, вне зависимости от их значения, за
 // исключением полей встроенных типов
 func (rep *CrudRepository[T, K]) UpdateUnsafe(id K, entity T) (*T, error) {
-	rep.Store.Lock()
-	defer rep.Store.Unlock()
 
 	reflect.ValueOf(&entity).Elem().FieldByName(models.GetIdFieldNameOfEntity(&entity)).Set(reflect.ValueOf(id))
 
@@ -92,8 +81,6 @@ func (rep *CrudRepository[T, K]) UpdateUnsafe(id K, entity T) (*T, error) {
 // Update Изменяет только значения, которые не равны своему
 // нулевому значению, а также не игнорирует встроенные типы
 func (rep *CrudRepository[T, K]) Update(id K, entity T) (*T, error) {
-	rep.Store.Lock()
-	defer rep.Store.Unlock()
 
 	reflect.ValueOf(&entity).Elem().FieldByName(models.GetIdFieldNameOfEntity(&entity)).Set(reflect.ValueOf(id))
 
